@@ -35,10 +35,10 @@ export default function RootLayout({
                 <a href="/" className="font-semibold hover:underline">
                   Accueil
                 </a>
-                <a href="/" className="font-semibold hover:underline">
+                <a href="/ideas" className="font-semibold hover:underline">
                   Idées
                 </a>
-                <a href="/" className="font-semibold hover:underline">
+                <a href="/problems" className="font-semibold hover:underline">
                   Problèmes
                 </a>
               </nav>
@@ -51,7 +51,7 @@ export default function RootLayout({
 
         <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-4 text-sm text-zinc-500 dark:text-zinc-400" suppressHydrationWarning>
-            my scripts© {new Date().getFullYear()}
+            my business ideas© {new Date().getFullYear()}
           </div>
         </footer>
       </body>

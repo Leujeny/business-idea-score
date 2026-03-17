@@ -12,7 +12,7 @@ interface ScriptCardProps {
   tag: string;
 }
 
-export default function ScriptCard({
+export default function IdeaCard({
   title,
   description,
   href,
@@ -26,9 +26,9 @@ export default function ScriptCard({
             {title}
           </Typography>
           <Chip label={tag} size="small" color="default" sx={{ marginBottom: 2 }} />
-          <Typography variant="body2" component="p" color="text.secondary">
+          {/* <Typography variant="body2" component="p" color="text.secondary">
             {description}
-          </Typography>
+          </Typography> */}
         </CardContent>
       </Card>
     </Link>
