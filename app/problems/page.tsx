@@ -6,6 +6,7 @@ import { supabase } from "@/utils/supabase";
 import MainTemplate from "@/components/templates/mainTemplate";
 import { Stack, Chip, Box } from "@mui/material";
 import ProblemCard from "@/components/molecules/cards/problemCard";
+import TagBar from "@/components/organisms/tagBar/tagBar";
 
 export default function Problems() {
     const [scripts, setScripts] = useState<any[]>([]);
@@ -15,7 +16,7 @@ export default function Problems() {
     const fetchScripts = async () => {
         setLoading(true);
         const { data, error } = await supabase
-            .from('scripts')
+            .from('problems')
             .select('*')
             .order('created_at', { ascending: true });
 
@@ -42,33 +43,11 @@ export default function Problems() {
             pageTitle={"Mes problèmes"} pageSubtitle={"La liste des problèmes"}
             loading={loading} datas={scripts}
             addLink={"/problems/new"} addTitle={"Ajouter un problème"} emptyMessage={"Aucun problème trouvé"}>
-
-            <Box sx={{ mb: 4 }}>
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                    <Chip
-                        label="Tous"
-                        onClick={() => setSelectedTag(null)}
-                        color={selectedTag === null ? "primary" : "default"}
-                        variant={selectedTag === null ? "filled" : "outlined"}
-                        clickable
-                    />
-                    {tags.map(tag => (
-                        <Chip
-                            key={tag}
-                            label={tag}
-                            onClick={() => setSelectedTag(tag)}
-                            color={selectedTag === tag ? "primary" : "default"}
-                            variant={selectedTag === tag ? "filled" : "outlined"}
-                            clickable
-                        />
-                    ))}
-                </Stack>
-            </Box>
-
+            <TagBar tags={tags} selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
             <Grid container spacing={2}>
                 {filteredScripts.map((card) => (
                     <Grid key={card.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                        <ProblemCard title={card.title} description={card.description} href={`/ideas/${card.id}`} tag={card.tag} />
+                        <ProblemCard title={card.title} description={card.description} href={`/problems/${card.id}`} tag={card.tag} />
                     </Grid>
                 ))}
             </Grid>

@@ -4,8 +4,8 @@ import { useEffect, useState, useMemo } from "react";
 import Grid from "@mui/material/Grid";
 import { supabase } from "@/utils/supabase";
 import MainTemplate from "@/components/templates/mainTemplate";
-import { Stack, Chip, Box } from "@mui/material";
 import IdeaCard from "@/components/molecules/cards/ideaCard";
+import TagBar from "@/components/organisms/tagBar/tagBar";
 
 export default function Ideas() {
     const [scripts, setScripts] = useState<any[]>([]);
@@ -43,28 +43,7 @@ export default function Ideas() {
             pageTitle={"Mes idées"} pageSubtitle={"La liste des idées"}
             loading={loading} datas={scripts}
             addLink={"/ideas/new"} addTitle={"Ajouter une idée"} emptyMessage={"Aucune idée trouvée"}>
-
-            <Box sx={{ mb: 4 }}>
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                    <Chip
-                        label="Tous"
-                        onClick={() => setSelectedTag(null)}
-                        color={selectedTag === null ? "primary" : "default"}
-                        variant={selectedTag === null ? "filled" : "outlined"}
-                        clickable
-                    />
-                    {tags.map(tag => (
-                        <Chip
-                            key={tag}
-                            label={tag}
-                            onClick={() => setSelectedTag(tag)}
-                            color={selectedTag === tag ? "primary" : "default"}
-                            variant={selectedTag === tag ? "filled" : "outlined"}
-                            clickable
-                        />
-                    ))}
-                </Stack>
-            </Box>
+            <TagBar tags={tags} selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
 
             <Grid container spacing={2}>
                 {filteredScripts.map((card) => (
