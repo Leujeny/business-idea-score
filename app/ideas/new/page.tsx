@@ -1,20 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-    Box,
-    Button,
-    Paper,
-    Stack,
-    Alert,
-    CircularProgress
-} from "@mui/material";
+import { FormEvent, useState } from "react";
+import { Box, Paper } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import TopPageTitle from "@/components/atoms/typographies/topPageTitle";
 import TopPageSubtitle from "@/components/atoms/typographies/topPageSubtitle";
-import InputText from "@/components/atoms/forms/inputText";
+import FormStepper from "@/components/molecules/formStepper";
+import StepContent from "@/components/organisms/stepContent";
+import { IDEA_STEPS } from "@/datas/ideaStep";
 
 export default function NewIdeaPage() {
     const router = useRouter();
@@ -24,7 +19,12 @@ export default function NewIdeaPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    // ------------ stepper
+    const [activeStep, setActiveStep] = useState(0);
+    const [skipped, setSkipped] = useState(new Set<number>());
+    // ------------
+
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
@@ -51,62 +51,32 @@ export default function NewIdeaPage() {
     };
 
     return (
-        <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-            <Link href="/ideas" style={{ display: "inline-block", marginBottom: 16 }}>
+        <>
+            <Link href="/ideas" style={{ display: "inline-block", marginBottom: 12 }}>
                 ← Retour à l'accueil
             </Link>
+            <Box sx={{ maxWidth: 600, mx: "auto", mt: 1 }}>
+                <TopPageTitle title="Ajouter une nouvelle idée" />
+                <TopPageSubtitle title="Créez une nouvelle idée." />
+                <FormStepper steps={IDEA_STEPS} activeStep={activeStep} setSkipped={setSkipped} setActiveStep={setActiveStep} skipped={skipped}>
+                    <Paper sx={{ p: 4, mt: 2, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+                        <form onSubmit={handleSubmit}>
+                            <StepContent
+                                activeStep={activeStep}
+                                title={title}
+                                description={description}
+                                tag={tag}
+                                setTitle={setTitle}
+                                setDescription={setDescription}
+                                setTag={setTag}
+                                error={error}
+                                loading={loading}
+                            />
+                        </form>
+                    </Paper>
+                </FormStepper>
 
-            <TopPageTitle title="Ajouter une nouvelle idée" />
-            <TopPageSubtitle title="Créez une nouvelle idée." />
-
-            <Paper sx={{ p: 4, mt: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                <form onSubmit={handleSubmit}>
-                    <Stack spacing={3}>
-                        {error && <Alert severity="error">{error}</Alert>}
-                        <InputText
-                            value={title}
-                            setValue={setTitle}
-                            label="Titre de l'idée"
-                            placeholder="ex: Isolation 1€, Pompe à chaleur..."
-                        />
-                        <InputText
-                            value={description}
-                            setValue={setDescription}
-                            label="Description"
-                            placeholder="Décrivez brièvement l'objectif de ce script."
-                            multiline
-                            rows={10}
-                        />
-                        <InputText
-                            value={tag}
-                            setValue={setTag}
-                            label="Tag / Catégorie"
-                            placeholder="ex: Énergie, Administratif..."
-                        />
-
-                        <Box sx={{ pt: 2, display: 'flex', gap: 2 }}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                disabled={loading}
-                                startIcon={loading && <CircularProgress size={20} color="inherit" />}
-                            >
-                                {loading ? "Création..." : "Créer l'idée"}
-                            </Button>
-
-                            <Button
-                                variant="outlined"
-                                onClick={() => router.push('/ideas')}
-                                disabled={loading}
-                            >
-                                Annuler
-                            </Button>
-                        </Box>
-                    </Stack>
-                </form>
-            </Paper>
-        </Box>
+            </Box>
+        </>
     );
 }
