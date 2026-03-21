@@ -4,6 +4,8 @@ import { humanNeeds } from "@/datas/humanNeed";
 import { marketAssessments } from "@/datas/marketAssessment";
 import Typography from "@mui/material/Typography";
 import MarketAssessmentStep from "./Steps/marketAssessmentStep";
+import FormOfValueStep from "./Steps/formOfValueStep";
+import { formOfValues } from "@/datas/formOfValue";
 
 interface StepContentProps {
     activeStep: number;
@@ -39,6 +41,10 @@ export default function StepContent({ activeStep, title, description, tag, setTi
     } else if (activeStep === 2) {
         return (
             <MarketAssessmentStep marketAssessments={marketAssessments} />
+        );
+    } else if (activeStep === 3) {
+        return (
+            <FormOfValueStep formOfValues={formOfValues} />
         );
     }
     return (
