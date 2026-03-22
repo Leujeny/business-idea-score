@@ -19,15 +19,17 @@ export default function CheckboxWithInput({ title, placeholder, infoContent }: C
     // Put InfoDialog outside the file, it should be mutualized
     return (
         <>
-            <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 2 }}>
-                <Stack direction="row" alignItems="center" gap={1}>
-                    <Typography variant="button">{title}</Typography>
-                    <IconButton aria-label="info" size="small" color="primary" onClick={() => setIsInfoOpen(true)}>
+            <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 1 }}>
+                <Stack direction="row" alignItems="center" justifyContent={'space-between'}>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                        <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+                        <Typography variant="button">{title}</Typography>
+                    </Stack>
+                    <IconButton aria-label="info" size="small" color="info" onClick={() => setIsInfoOpen(true)}>
                         <InfoIcon fontSize="inherit" />
                     </IconButton>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap={2}>
-                    <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+                {/* <Stack direction="row" alignItems="center" gap={2}>
                     <TextField
                         variant="standard"
                         size="small"
@@ -35,7 +37,7 @@ export default function CheckboxWithInput({ title, placeholder, infoContent }: C
                         disabled={!checked}
                         fullWidth
                     />
-                </Stack>
+                </Stack> */}
             </Box>
             <InfoDialog open={isInfoOpen} onClose={() => setIsInfoOpen(false)} title={title}>
                 <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>

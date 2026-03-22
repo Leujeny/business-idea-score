@@ -37,8 +37,8 @@ export default function SliderWithInput({ title, placeholder, infoContent }: Sli
 
     return (
         <>
-            <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 2 }}>
-                <Stack direction="row" alignItems="center" gap={1}>
+            <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 2, height: '100%' }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1}>
                     <Typography variant="button">{title}</Typography>
                     <IconButton aria-label="info" size="small" color="primary" onClick={() => setIsInfoOpen(true)}>
                         <InfoIcon fontSize="inherit" />
@@ -53,16 +53,16 @@ export default function SliderWithInput({ title, placeholder, infoContent }: Sli
                     marks={marks}
                     min={0}
                     max={10}
-                    sx={{ maxWidth: '200px', mx: 'auto', mt: 2 }}
+                    sx={{ mx: 'auto', mt: 2 }}
                 />
-                <TextField
+                {/* <TextField
                     variant="standard"
                     size="small"
                     placeholder={placeholder}
                     // disabled={!checked}
                     fullWidth
                     sx={{ mt: 2 }}
-                />
+                /> */}
                 {/* </Stack> */}
             </Box>
             <InfoDialog open={isInfoOpen} onClose={() => setIsInfoOpen(false)} title={title}>
