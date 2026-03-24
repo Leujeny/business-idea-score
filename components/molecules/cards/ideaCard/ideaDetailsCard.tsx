@@ -1,10 +1,8 @@
-"use client";
-
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import type { SxProps, Theme } from "@mui/material/styles";
+import type { SxProps } from "@mui/material/styles";
 
 interface IdeaDetailsCardProps {
   title: string;
@@ -15,10 +13,10 @@ export default function IdeaDetailsCard({ title, children }: IdeaDetailsCardProp
   return (
 
     // <Link href={href} style={{ textDecoration: "none", color: "inherit", width: "100%" }}>
-    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid size={{ xs: 12, sm: 6, md: 12 }}>
       <Card sx={scriptCardSx}>
         <CardContent>
-          <Typography gutterBottom variant="h6" component="h2">{title}</Typography>
+          <Typography gutterBottom variant="h6" component="h2" color="text.secondary">{title}</Typography>
           {children}
         </CardContent>
       </Card>
@@ -27,12 +25,6 @@ export default function IdeaDetailsCard({ title, children }: IdeaDetailsCardProp
   );
 }
 
-const scriptCardSx: SxProps<Theme> = (theme) => ({
+const scriptCardSx: SxProps = {
   height: "100%",
-  // transition: "box-shadow 0.2s ease, transform 0.2s ease",
-  // "&:hover": {
-  //   boxShadow: theme.shadows[6],
-  //   transform: "translateY(-2px)",
-  //   bgcolor: "action.hover",
-  // },
-});
+};

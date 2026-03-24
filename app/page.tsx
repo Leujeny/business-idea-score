@@ -1,6 +1,6 @@
 "use client";
 
-import IdeaCard from "@/components/molecules/cards/ideaCard";
+import IdeaCard from "@/components/molecules/cards/ideaCard/ideaCard";
 import { supabase } from "@/utils/supabase";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";

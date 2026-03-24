@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import Grid from "@mui/material/Grid";
 import { supabase } from "@/utils/supabase";
 import MainTemplate from "@/components/templates/mainTemplate";
-import IdeaCard from "@/components/molecules/cards/ideaCard";
+import IdeaCard from "@/components/molecules/cards/ideaCard/ideaCard";
 import TagBar from "@/components/organisms/tagBar/tagBar";
 
 export default function Ideas() {
