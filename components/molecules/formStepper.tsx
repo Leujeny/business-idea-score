@@ -1,57 +1,26 @@
 
-import { Box, Button, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { Box, Button, Step, StepLabel, Stepper } from "@mui/material";
 
 interface FormStepperProps {
     steps: string[];
     activeStep: number;
     children: React.ReactNode;
-    setSkipped: React.Dispatch<React.SetStateAction<Set<number>>>;
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-    skipped: Set<number>;
+    handleSubmit: () => Promise<void>;
 }
 
-export default function FormStepper({ steps, activeStep, children, setSkipped, setActiveStep, skipped }: FormStepperProps) {
-
-    const isStepOptional = (step: number) => {
-        return step === 1;
-    };
-
-    const isStepSkipped = (step: number) => {
-        return skipped.has(step);
-    };
+export default function FormStepper({ steps, activeStep, setActiveStep, children, handleSubmit }: FormStepperProps) {
 
     const handleNext = () => {
-        let newSkipped = skipped;
-        // if (isStepSkipped(activeStep)) {
-        //     newSkipped = new Set(newSkipped.values());
-        //     newSkipped.delete(activeStep);
-        // }
-
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        // setSkipped(newSkipped);
+
+        if (activeStep === steps.length - 1) {
+            handleSubmit();
+        }
     };
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleSkip = () => {
-        if (!isStepOptional(activeStep)) {
-            // You probably want to guard against something like this,
-            // it should never occur unless someone's actively trying to break something.
-            throw new Error("You can't skip a step that isn't optional.");
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped((prevSkipped) => {
-            const newSkipped = new Set(prevSkipped.values());
-            newSkipped.add(activeStep);
-            return newSkipped;
-        });
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
     };
 
     return (
@@ -59,27 +28,16 @@ export default function FormStepper({ steps, activeStep, children, setSkipped, s
             <Stepper activeStep={activeStep} alternativeLabel sx={{ mt: 2 }}>
                 {steps.map((label, index) => {
                     const stepProps: { completed?: boolean } = {};
-                    const labelProps: {
-                        optional?: React.ReactNode;
-                    } = {};
-                    // if (isStepOptional(index)) {
-                    //     labelProps.optional = (
-                    //         <Typography variant="caption">Optional</Typography>
-                    //     );
-                    // }
-                    // if (isStepSkipped(index)) {
-                    //     stepProps.completed = false;
-                    // }
                     return (
                         <Step key={label} {...stepProps}>
-                            <StepLabel {...labelProps}>{label}</StepLabel>
+                            <StepLabel sx={{ display: { xs: 'none', sm: 'flex' } }}>{label}</StepLabel>
+                            <StepLabel sx={{ display: { xs: 'flex', sm: 'none' } }} />
                         </Step>
                     );
                 })}
             </Stepper>
             {children}
             <>
-                {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                     <Button
                         color="inherit"
@@ -90,11 +48,6 @@ export default function FormStepper({ steps, activeStep, children, setSkipped, s
                         Back
                     </Button>
                     <Box sx={{ flex: '1 1 auto' }} />
-                    {/* {isStepOptional(activeStep) && (
-                        <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                            Skip
-                        </Button>
-                    )} */}
                     <Button onClick={handleNext}>
                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                     </Button>

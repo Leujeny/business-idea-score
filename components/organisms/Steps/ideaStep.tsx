@@ -1,5 +1,4 @@
 import InputText from "@/components/atoms/forms/inputText";
-import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 
 interface IdeaStepProps {
@@ -9,15 +8,11 @@ interface IdeaStepProps {
     setTitle: (val: string) => void;
     setDescription: (val: string) => void;
     setTag: (val: string) => void;
-    error: string | null;
-    loading: boolean;
 }
 
-export default function IdeaStep({ title, description, tag, setTitle, setDescription, setTag, error, loading }: IdeaStepProps) {
-
+export default function IdeaStep({ title, description, tag, setTitle, setDescription, setTag }: IdeaStepProps) {
     return (
         <Stack spacing={3}>
-            {error && <Alert severity="error">{error}</Alert>}
             <InputText
                 value={title}
                 setValue={setTitle}
@@ -38,26 +33,6 @@ export default function IdeaStep({ title, description, tag, setTitle, setDescrip
                 label="Tag / Catégorie"
                 placeholder="ex: Énergie, Administratif..."
             />
-            {/* <Box sx={{ pt: 2, display: 'flex', gap: 2 }}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            disabled={loading}
-                            startIcon={loading && <CircularProgress size={20} color="inherit" />}
-                        >
-                            {loading ? "Création..." : "Créer l'idée"}
-                        </Button>
-
-                        <Button
-                            variant="outlined"
-                            onClick={() => router.push('/ideas')}
-                            disabled={loading}
-                        >
-                            Annuler
-                        </Button>
-                    </Box> */}
         </Stack>
     );
 }

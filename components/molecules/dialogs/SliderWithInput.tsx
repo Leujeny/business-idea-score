@@ -10,6 +10,8 @@ interface SliderWithInputProps {
     title: string;
     placeholder: string;
     infoContent: React.ReactNode;
+    value?: number;
+    onChange?: (value: number) => void;
 }
 const marks = [
     {
@@ -25,9 +27,22 @@ const marks = [
         label: '10',
     },
 ];
-export default function SliderWithInput({ title, placeholder, infoContent }: SliderWithInputProps) {
-    const [checked, setChecked] = useState(false);
+export default function SliderWithInput({ title, placeholder, infoContent, value: propValue, onChange: propOnChange }: SliderWithInputProps) {
+    const [internalValue, setInternalValue] = useState(0);
     const [isInfoOpen, setIsInfoOpen] = useState(false);
+
+    const isControlled = propValue !== undefined;
+    const value = isControlled ? propValue : internalValue;
+
+    const handleChange = (_event: Event, newValue: number | number[]) => {
+        const val = newValue as number;
+        if (!isControlled) {
+            setInternalValue(val);
+        }
+        if (propOnChange) {
+            propOnChange(val);
+        }
+    };
     // Put InfoDialog outside the file, it should be mutualized
 
     function valuetext(value: number) {
@@ -46,24 +61,16 @@ export default function SliderWithInput({ title, placeholder, infoContent }: Sli
                 </Stack>
                 <Slider
                     aria-label="Custom marks"
-                    defaultValue={0}
                     getAriaValueText={valuetext}
                     step={1}
+                    value={value}
+                    onChange={handleChange}
                     valueLabelDisplay="auto"
                     marks={marks}
                     min={0}
                     max={10}
                     sx={{ mx: 'auto', mt: 2 }}
                 />
-                {/* <TextField
-                    variant="standard"
-                    size="small"
-                    placeholder={placeholder}
-                    // disabled={!checked}
-                    fullWidth
-                    sx={{ mt: 2 }}
-                /> */}
-                {/* </Stack> */}
             </Box>
             <InfoDialog open={isInfoOpen} onClose={() => setIsInfoOpen(false)} title={title}>
                 <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>

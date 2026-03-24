@@ -6,9 +6,11 @@ import Typography from "@mui/material/Typography";
 
 interface MarketAssessmentStepProps {
     marketAssessments: MarketAssessment[];
+    assessmentValues: Record<number, number>;
+    onChangeValue: (id: number, value: number) => void;
 }
 
-export default function MarketAssessmentStep({ marketAssessments }: MarketAssessmentStepProps) {
+export default function MarketAssessmentStep({ marketAssessments, assessmentValues, onChangeValue }: MarketAssessmentStepProps) {
 
     return (
         <FormGroup sx={{ gap: 2 }}>
@@ -20,6 +22,8 @@ export default function MarketAssessmentStep({ marketAssessments }: MarketAssess
                             title={need.title}
                             placeholder={need.placeholder}
                             infoContent={need.content}
+                            value={assessmentValues[need.id] || 0}
+                            onChange={(val) => onChangeValue(need.id, val)}
                         />
                     </Grid>
                 ))}

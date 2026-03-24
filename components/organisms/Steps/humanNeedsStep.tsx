@@ -6,9 +6,11 @@ import Typography from "@mui/material/Typography";
 
 interface HumanNeedsStepProps {
     humanNeeds: HumanNeed[];
+    selectedNeeds: number[];
+    onToggleNeed: (id: number) => void;
 }
 
-export default function HumanNeedsStep({ humanNeeds }: HumanNeedsStepProps) {
+export default function HumanNeedsStep({ humanNeeds, selectedNeeds, onToggleNeed }: HumanNeedsStepProps) {
 
     return (
         <FormGroup sx={{ gap: 2 }}>
@@ -20,12 +22,12 @@ export default function HumanNeedsStep({ humanNeeds }: HumanNeedsStepProps) {
                             title={need.title}
                             placeholder={need.placeholder}
                             infoContent={need.content}
+                            checked={selectedNeeds.includes(need.id)}
+                            onChange={() => onToggleNeed(need.id)}
                         />
                     </Grid>
                 ))}
-
             </Grid>
-
         </FormGroup>
     );
 }

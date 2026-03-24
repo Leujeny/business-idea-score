@@ -6,9 +6,11 @@ import Typography from "@mui/material/Typography";
 
 interface FormOfValueStepProps {
     formOfValues: FormOfValue[];
+    selectedValues: number[];
+    onToggleValue: (id: number) => void;
 }
 
-export default function FormOfValueStep({ formOfValues }: FormOfValueStepProps) {
+export default function FormOfValueStep({ formOfValues, selectedValues, onToggleValue }: FormOfValueStepProps) {
 
     return (
         <FormGroup sx={{ gap: 2 }}>
@@ -20,6 +22,8 @@ export default function FormOfValueStep({ formOfValues }: FormOfValueStepProps) 
                             title={formOfValue.title}
                             placeholder={formOfValue.placeholder}
                             infoContent={formOfValue.content}
+                            checked={selectedValues.includes(formOfValue.id)}
+                            onChange={() => onToggleValue(formOfValue.id)}
                         />
                     </Grid>
                 ))}

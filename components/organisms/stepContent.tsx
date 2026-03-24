@@ -12,14 +12,18 @@ interface StepContentProps {
     title: string;
     description: string;
     tag: string;
-    setTitle: (val: string) => void;
-    setDescription: (val: string) => void;
-    setTag: (val: string) => void;
-    error: string | null;
-    loading: boolean;
+    setTitle: (title: string) => void;
+    setDescription: (description: string) => void;
+    setTag: (tag: string) => void;
+    selectedHumanNeeds: number[];
+    setSelectedHumanNeeds: (selectedHumanNeeds: number[]) => void;
+    selectedMarketAssessments: Record<number, number>;
+    setSelectedMarketAssessments: (selectedMarketAssessments: Record<number, number>) => void;
+    selectedFormOfValues: number[];
+    setSelectedFormOfValues: (selectedFormOfValues: number[]) => void;
 }
-
-export default function StepContent({ activeStep, title, description, tag, setTitle, setDescription, setTag, error, loading }: StepContentProps) {
+// TODO: fix the types
+export default function StepContent({ activeStep, title, description, tag, setTitle, setDescription, setTag, selectedHumanNeeds, setSelectedHumanNeeds, selectedMarketAssessments, setSelectedMarketAssessments, selectedFormOfValues, setSelectedFormOfValues }: StepContentProps) {
 
     if (activeStep === 0) {
         return (
@@ -30,21 +34,42 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setTag={setTag}
-                error={error}
-                loading={loading}
+                activeStep={activeStep}
             />
         );
     } else if (activeStep === 1) {
         return (
-            <HumanNeedsStep humanNeeds={humanNeeds} />
+            <HumanNeedsStep
+                humanNeeds={humanNeeds}
+                selectedNeeds={selectedHumanNeeds}
+                onToggleNeed={(id) => {
+                    setSelectedHumanNeeds(prev =>
+                        prev.includes(id) ? prev.filter(n => n !== id) : [...prev, id]
+                    );
+                }}
+            />
         );
     } else if (activeStep === 2) {
         return (
-            <MarketAssessmentStep marketAssessments={marketAssessments} />
+            <MarketAssessmentStep
+                marketAssessments={marketAssessments}
+                assessmentValues={selectedMarketAssessments}
+                onChangeValue={(id, value) => {
+                    setSelectedMarketAssessments(prev => ({ ...prev, [id]: value }));
+                }}
+            />
         );
     } else if (activeStep === 3) {
         return (
-            <FormOfValueStep formOfValues={formOfValues} />
+            <FormOfValueStep
+                formOfValues={formOfValues}
+                selectedValues={selectedFormOfValues}
+                onToggleValue={(id) => {
+                    setSelectedFormOfValues(prev =>
+                        prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
+                    );
+                }}
+            />
         );
     }
     return (
