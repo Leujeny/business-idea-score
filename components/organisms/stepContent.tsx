@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import MarketAssessmentStep from "./Steps/marketAssessmentStep";
 import FormOfValueStep from "./Steps/formOfValueStep";
 import { formOfValues } from "@/datas/formOfValue";
+import ContentLoader from "../molecules/contentLoader";
 
 interface StepContentProps {
     activeStep: number;
@@ -73,6 +74,6 @@ export default function StepContent({ activeStep, title, description, tag, setTi
         );
     }
     return (
-        <Typography>Step {activeStep}</Typography>
+        <ContentLoader />
     );
 }
