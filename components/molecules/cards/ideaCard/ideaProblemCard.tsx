@@ -3,21 +3,17 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import type { SxProps } from "@mui/material/styles";
 
-interface IdeaPersonCardProps {
+interface IdeaProblemCardProps {
   title: string;
+  description: string;
 }
 
-export default function IdeaPersonCard({ title }: IdeaPersonCardProps) {
+export default function IdeaProblemCard({ title, description }: IdeaProblemCardProps) {
   return (
-
-    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+    <Grid size={{ xs: 12, md: 6 }}>
       <Paper sx={scriptCardSx} variant="outlined">
         <Typography variant="body1" component="p" sx={{ fontWeight: 'bold' }}>{title}</Typography>
-        <Typography variant="body2" component="p" color="text.secondary">
-          <span>- Charactérisque 1<br /></span>
-          <span>- Charactérisque 2<br /></span>
-          <span>- Charactérisque 3<br /></span>
-        </Typography>
+        <Typography variant="body2" component="p" color="text.secondary">{description}</Typography>
       </Paper>
     </Grid>
   );

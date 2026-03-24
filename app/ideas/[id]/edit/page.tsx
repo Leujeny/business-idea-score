@@ -1,48 +1,78 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-    Box,
-    Button,
-    Paper,
-    Stack,
-    Alert,
-    CircularProgress
-} from "@mui/material";
-import Link from "next/link";
+import { Box, Paper, CircularProgress } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import TopPageTitle from "@/components/atoms/typographies/topPageTitle";
 import TopPageSubtitle from "@/components/atoms/typographies/topPageSubtitle";
-import InputText from "@/components/atoms/forms/inputText";
+import BackButton from "@/components/atoms/buttons/backButton";
+import FormStepper from "@/components/molecules/formStepper";
+import { IDEA_STEPS } from "@/datas/ideaStep";
+import StepContent from "@/components/organisms/stepContent";
 
 export default function EditIdeaPage() {
     const router = useRouter();
     const params = useParams();
     const id = params.id as string;
 
+    // ------------ form
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [tag, setTag] = useState("");
+    // Human Needs
+    const [selectedHumanNeeds, setSelectedHumanNeeds] = useState<number[]>([]);
+    // Market Assessment
+    const [selectedMarketAssessments, setSelectedMarketAssessments] = useState<Record<number, number>>({});
+    // Form of Value
+    const [selectedFormOfValues, setSelectedFormOfValues] = useState<number[]>([]);
+
     const [loading, setLoading] = useState(false);
-    const [fetching, setFetching] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [fetching, setFetching] = useState(true);
+
+    const [activeStep, setActiveStep] = useState(0);
 
     useEffect(() => {
         if (!id) return;
         const fetchIdea = async () => {
             try {
-                const { data, error } = await supabase
-                    .from('ideas')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
+                const { data, error } = await supabase.from('ideas').select('*').eq('id', id).single();
                 if (error) throw error;
                 if (data) {
                     setTitle(data.title || "");
                     setDescription(data.description || "");
                     setTag(data.tag || "");
+                }
+
+                // Fetch human needs
+                const { data: needsData, error: needsError } = await supabase.from('human_needs').select('need_id').eq('idea_id', id);
+                if (!needsError && needsData) {
+                    setSelectedHumanNeeds(needsData.map((n: any) => n.need_id));
+                }
+
+                // Fetch market assessments
+                const { data: marketData, error: marketError } = await supabase
+                    .from('market_assessments')
+                    .select('market_id, rating')
+                    .eq('idea_id', id);
+
+                if (!marketError && marketData) {
+                    const assessments: Record<number, number> = {};
+                    marketData.forEach((m: any) => {
+                        assessments[m.market_id] = m.rating;
+                    });
+                    setSelectedMarketAssessments(assessments);
+                }
+
+                // Fetch form of values
+                const { data: formValuesData, error: formValuesError } = await supabase
+                    .from('form_values')
+                    .select('form_id')
+                    .eq('idea_id', id);
+
+                if (!formValuesError && formValuesData) {
+                    setSelectedFormOfValues(formValuesData.map((f: any) => f.form_id));
                 }
             } catch (err: any) {
                 console.error("Error fetching idea:", err);
@@ -54,18 +84,40 @@ export default function EditIdeaPage() {
         fetchIdea();
     }, [id]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const { error: sbError } = await supabase
-                .from('ideas')
-                .update({ title, description, tag })
-                .eq('id', id);
-
+            const { data, error: sbError } = await supabase.from('ideas').update({
+                title: title,
+                description: description,
+                tag: tag,
+                rating: Object.values(selectedMarketAssessments).reduce((acc, curr) => acc + curr, 0)
+            }).eq('id', id).select('id').single();
             if (sbError) throw sbError;
+
+            // Delete existing relations
+            await supabase.from('human_needs').delete().eq('idea_id', id);
+            await supabase.from('market_assessments').delete().eq('idea_id', id);
+            await supabase.from('form_values').delete().eq('idea_id', id);
+
+            // Re-insert with new data
+            if (selectedHumanNeeds.length > 0) {
+                const { error: needsError } = await supabase.from('human_needs').insert(selectedHumanNeeds.map((needId) => ({ idea_id: data.id, need_id: needId })));
+                if (needsError) throw needsError;
+            }
+
+            const marketAssessmentsToInsert = Object.entries(selectedMarketAssessments).map(([marketId, value]) => ({ idea_id: data.id, market_id: Number(marketId), rating: value }));
+            if (marketAssessmentsToInsert.length > 0) {
+                const { error: marketAssessmentError } = await supabase.from('market_assessments').insert(marketAssessmentsToInsert);
+                if (marketAssessmentError) throw marketAssessmentError;
+            }
+
+            if (selectedFormOfValues.length > 0) {
+                const { error: formOfValueError } = await supabase.from('form_values').insert(selectedFormOfValues.map((formId) => ({ idea_id: data.id, form_id: formId })));
+                if (formOfValueError) throw formOfValueError;
+            }
 
             // Success: redirect to the idea page
             router.push(`/ideas/${id}`);
@@ -87,62 +139,33 @@ export default function EditIdeaPage() {
     }
 
     return (
-        <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-            <Link href={`/ideas/${id}`} style={{ display: "inline-block", marginBottom: 16 }}>
-                ← Retour à l'idée
-            </Link>
-
-            <TopPageTitle title="Éditer l'idée" />
-            <TopPageSubtitle title="Modifiez les informations de l'idée." />
-
-            <Paper sx={{ p: 4, mt: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                <form onSubmit={handleSubmit}>
-                    <Stack spacing={3}>
-                        {error && <Alert severity="error">{error}</Alert>}
-                        <InputText
-                            value={title}
-                            setValue={setTitle}
-                            label="Titre de l'idée"
-                            placeholder="ex: Isolation 1€, Pompe à chaleur..."
-                        />
-                        <InputText
-                            value={description}
-                            setValue={setDescription}
-                            label="Description"
-                            placeholder="Décrivez brièvement l'idée."
-                            multiline
-                            rows={10}
-                        />
-                        <InputText
-                            value={tag}
-                            setValue={setTag}
-                            label="Tag / Catégorie"
-                            placeholder="ex: Énergie, Administratif..."
-                        />
-
-                        <Box sx={{ pt: 2, display: 'flex', gap: 2 }}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                disabled={loading}
-                                startIcon={loading && <CircularProgress size={20} color="inherit" />}
-                            >
-                                {loading ? "Modification..." : "Enregistrer les modifications"}
-                            </Button>
-
-                            <Button
-                                variant="outlined"
-                                onClick={() => router.push(`/ideas/${id}`)}
-                                disabled={loading}
-                            >
-                                Annuler
-                            </Button>
-                        </Box>
-                    </Stack>
-                </form>
-            </Paper>
-        </Box>
+        <>
+            <BackButton title="Retour" link={`/ideas/${id}`} />
+            <Box sx={{ maxWidth: 600, mx: "auto", mt: 1 }}>
+                <TopPageTitle title="Ajouter une nouvelle idée" />
+                <TopPageSubtitle title="Créez une nouvelle idée." />
+                <FormStepper steps={IDEA_STEPS} activeStep={activeStep} setActiveStep={setActiveStep} handleSubmit={handleSubmit}>
+                    <Paper sx={{ p: 4, mt: 2, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+                        <form>
+                            <StepContent
+                                activeStep={activeStep}
+                                title={title}
+                                description={description}
+                                tag={tag}
+                                setTitle={setTitle}
+                                setDescription={setDescription}
+                                setTag={setTag}
+                                selectedHumanNeeds={selectedHumanNeeds}
+                                setSelectedHumanNeeds={setSelectedHumanNeeds}
+                                selectedMarketAssessments={selectedMarketAssessments}
+                                setSelectedMarketAssessments={setSelectedMarketAssessments}
+                                selectedFormOfValues={selectedFormOfValues}
+                                setSelectedFormOfValues={setSelectedFormOfValues}
+                            />
+                        </form>
+                    </Paper>
+                </FormStepper>
+            </Box>
+        </>
     );
 }

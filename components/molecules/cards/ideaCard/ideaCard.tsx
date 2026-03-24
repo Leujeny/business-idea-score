@@ -20,7 +20,7 @@ export default function IdeaCard({
 }: ScriptCardProps) {
   return (
     <Link href={href} style={{ textDecoration: "none", color: "inherit", width: "100%" }}>
-      <Card sx={scriptCardSx}>
+      <Card sx={scriptCardSx} elevation={0}>
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">
             {title}
