@@ -38,9 +38,12 @@ export default function RootLayout({
                 <a href="/ideas" className="font-semibold hover:underline">
                   Idées
                 </a>
-                <a href="/problems" className="font-semibold hover:underline">
+                <a href="/problems" className="font-semibold hover:underline ">
                   Problèmes
                 </a>
+                {/* <a href="/associations" className="font-semibold hover:underline">
+                  Associations
+                </a> */}
               </nav>
             </div>
           </header>

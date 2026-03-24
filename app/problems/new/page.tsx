@@ -9,12 +9,12 @@ import {
     Alert,
     CircularProgress
 } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import TopPageTitle from "@/components/atoms/typographies/topPageTitle";
 import TopPageSubtitle from "@/components/atoms/typographies/topPageSubtitle";
 import InputText from "@/components/atoms/forms/inputText";
+import BackButton from "@/components/atoms/buttons/backButton";
 
 export default function NewProblemPage() {
     const router = useRouter();
@@ -51,62 +51,61 @@ export default function NewProblemPage() {
     };
 
     return (
-        <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
-            <Link href="/problems" style={{ display: "inline-block", marginBottom: 16 }}>
-                ← Retour aux problèmes
-            </Link>
+        <>
+            <BackButton title="Retour" link="/problems" />
+            <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+                <TopPageTitle title="Ajouter un nouveau problème" />
+                <TopPageSubtitle title="Décrivez le problème que vous souhaitez résoudre." />
 
-            <TopPageTitle title="Ajouter un nouveau problème" />
-            <TopPageSubtitle title="Décrivez le problème que vous souhaitez résoudre." />
+                <Paper sx={{ p: 4, mt: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+                    <form onSubmit={handleSubmit}>
+                        <Stack spacing={3}>
+                            {error && <Alert severity="error">{error}</Alert>}
+                            <InputText
+                                value={title}
+                                setValue={setTitle}
+                                label="Titre du problème"
+                                placeholder="ex: Isolation 1€, Pompe à chaleur..."
+                            />
+                            <InputText
+                                value={description}
+                                setValue={setDescription}
+                                label="Description"
+                                placeholder="Décrivez brièvement le problème."
+                                multiline
+                                rows={10}
+                            />
+                            <InputText
+                                value={tag}
+                                setValue={setTag}
+                                label="Tag / Catégorie"
+                                placeholder="ex: Énergie, Administratif..."
+                            />
 
-            <Paper sx={{ p: 4, mt: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                <form onSubmit={handleSubmit}>
-                    <Stack spacing={3}>
-                        {error && <Alert severity="error">{error}</Alert>}
-                        <InputText
-                            value={title}
-                            setValue={setTitle}
-                            label="Titre du problème"
-                            placeholder="ex: Isolation 1€, Pompe à chaleur..."
-                        />
-                        <InputText
-                            value={description}
-                            setValue={setDescription}
-                            label="Description"
-                            placeholder="Décrivez brièvement le problème."
-                            multiline
-                            rows={10}
-                        />
-                        <InputText
-                            value={tag}
-                            setValue={setTag}
-                            label="Tag / Catégorie"
-                            placeholder="ex: Énergie, Administratif..."
-                        />
+                            <Box sx={{ pt: 2, display: 'flex', gap: 2 }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    disabled={loading}
+                                    startIcon={loading && <CircularProgress size={20} color="inherit" />}
+                                >
+                                    {loading ? "Création..." : "Créer le problème"}
+                                </Button>
 
-                        <Box sx={{ pt: 2, display: 'flex', gap: 2 }}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                disabled={loading}
-                                startIcon={loading && <CircularProgress size={20} color="inherit" />}
-                            >
-                                {loading ? "Création..." : "Créer le problème"}
-                            </Button>
-
-                            <Button
-                                variant="outlined"
-                                onClick={() => router.push('/problems')}
-                                disabled={loading}
-                            >
-                                Annuler
-                            </Button>
-                        </Box>
-                    </Stack>
-                </form>
-            </Paper>
-        </Box>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => router.push('/problems')}
+                                    disabled={loading}
+                                >
+                                    Annuler
+                                </Button>
+                            </Box>
+                        </Stack>
+                    </form>
+                </Paper>
+            </Box>
+        </>
     );
 }

@@ -1,13 +1,11 @@
 import TopPageTitle from "@/components/atoms/typographies/topPageTitle";
 import { notFound } from "next/navigation";
 import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
 import { supabase } from "@/utils/supabase";
-import EditButton from "@/components/atoms/buttons/editButton";
-import BackButton from "@/components/atoms/buttons/backButton";
 import GridIdeaDetail from "@/components/organisms/gridIdeaDetail";
 import BoxIdeaProblems from "@/components/organisms/boxIdeaProblems";
 import BoxIdeaPeople from "@/components/organisms/boxIdeaPeople";
+import TopBarView from "@/components/organisms/topBarView";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -26,10 +24,7 @@ export default async function ScriptPage({ params }: PageProps) {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <BackButton title="Retour" link="/ideas" />
-        <EditButton title="Éditer l'idée" link={`/ideas/${id}/edit`} />
-      </Box>
+      <TopBarView id={id} table="ideas" />
       <TopPageTitle title={card.title} />
       {card.tag && <Chip label={card.tag} size="small" color="primary" sx={{ mt: 1 }} />}
 

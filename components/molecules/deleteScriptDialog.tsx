@@ -21,10 +21,13 @@ export default function DeleteScriptDialog({ open, onClose, onConfirm, loading }
             open={open}
             onClose={() => !loading && onClose()}
         >
-            <DialogTitle>Supprimer le script ?</DialogTitle>
+            <DialogTitle>Supprimer l'élément</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Êtes-vous sûr de vouloir supprimer ce script ? Cette action est irréversible et supprimera également tous les blocs et objections associés.
+                    Êtes-vous sûr de vouloir supprimer cet élément ?
+                </DialogContentText>
+                <DialogContentText>
+                    Cette action est irréversible
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

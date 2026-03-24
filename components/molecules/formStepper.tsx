@@ -26,7 +26,7 @@ export default function FormStepper({ steps, activeStep, setActiveStep, children
     return (
         <>
             <Stepper activeStep={activeStep} alternativeLabel sx={{ mt: 2 }}>
-                {steps.map((label, index) => {
+                {steps.map((label) => {
                     const stepProps: { completed?: boolean } = {};
                     return (
                         <Step key={label} {...stepProps}>

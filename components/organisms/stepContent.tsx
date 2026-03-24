@@ -2,11 +2,11 @@ import IdeaStep from "./Steps/ideaStep";
 import HumanNeedsStep from "./Steps/humanNeedsStep";
 import { humanNeeds } from "@/datas/humanNeed";
 import { marketAssessments } from "@/datas/marketAssessment";
-import Typography from "@mui/material/Typography";
 import MarketAssessmentStep from "./Steps/marketAssessmentStep";
 import FormOfValueStep from "./Steps/formOfValueStep";
 import { formOfValues } from "@/datas/formOfValue";
 import ContentLoader from "../molecules/contentLoader";
+import AssociationStep from "./Steps/associationStep";
 
 interface StepContentProps {
     activeStep: number;
@@ -35,7 +35,6 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setTag={setTag}
-                activeStep={activeStep}
             />
         );
     } else if (activeStep === 1) {
@@ -69,6 +68,14 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                     setSelectedFormOfValues(prev =>
                         prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
                     );
+                }}
+            />
+        );
+    } else if (activeStep === 4) {
+        return (
+            <AssociationStep
+                onChangeValue={(id, value) => {
+                    setSelectedAssociations(prev => ({ ...prev, [id]: value }));
                 }}
             />
         );
