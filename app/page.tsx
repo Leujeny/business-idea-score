@@ -1,7 +1,9 @@
 "use client";
 
+import AddChooseButton from "@/components/atoms/buttons/addChooseButton";
 import BestIdeaCard from "@/components/molecules/cards/bestIdeaCard";
 import RecentCard from "@/components/molecules/cards/recentCard";
+import AddChooseDialog from "@/components/molecules/dialogs/addChooseDialog";
 import { useHome } from "@/hook/use.tsHome";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -10,11 +12,12 @@ import Typography from "@mui/material/Typography";
 
 export default function Home() {
 
-  const { state: { scripts, scripts2, loading }, setters: { fetchScripts } } = useHome();
+  const { state: { scripts, scripts2, open }, setters: { setOpen } } = useHome();
 
   return (
     <>
       <Box sx={{ mt: 2 }}>
+        <AddChooseButton title="Ajouter" onClick={() => setOpen(true)} />
         <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
           {"Mes meilleures idées"}
         </Typography>
@@ -38,6 +41,7 @@ export default function Home() {
           ))}
         </Grid>
       </Box>
+      <AddChooseDialog open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

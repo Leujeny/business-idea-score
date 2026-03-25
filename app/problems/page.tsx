@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import Grid from "@mui/material/Grid";
 import { supabase } from "@/utils/supabase";
 import MainTemplate from "@/components/templates/mainTemplate";
-import { Stack, Chip, Box } from "@mui/material";
 import ProblemCard from "@/components/molecules/cards/problemCard";
 import TagBar from "@/components/organisms/tagBar/tagBar";
 

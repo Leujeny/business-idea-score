@@ -9,6 +9,7 @@ export const useHome = () => {
     const [scripts, setScripts] = useState<any[]>([]);
     const [scripts2, setScripts2] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const fetchScripts = async () => {
         setLoading(true);
@@ -62,7 +63,7 @@ export const useHome = () => {
     }, []);
 
     return {
-        state: { scripts, scripts2, loading },
-        setters: { fetchScripts },
+        state: { scripts, scripts2, loading, open },
+        setters: { fetchScripts, setOpen },
     };
 };

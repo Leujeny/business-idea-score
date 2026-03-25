@@ -4,7 +4,7 @@ import { Box, Stack } from "@mui/material";
 import BackButton from "../atoms/buttons/backButton";
 import DeleteButton from "../atoms/buttons/deleteButton";
 import EditButton from "../atoms/buttons/editButton";
-import DeleteScriptDialog from "../molecules/deleteScriptDialog";
+import DeleteScriptDialog from "../molecules/dialogs/deleteScriptDialog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { supabase } from "@/utils/supabase";

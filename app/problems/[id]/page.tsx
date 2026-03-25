@@ -1,4 +1,3 @@
-import TopPageSubtitle from "@/components/atoms/typographies/topPageSubtitle";
 import TopPageTitle from "@/components/atoms/typographies/topPageTitle";
 import { notFound } from "next/navigation";
 import Chip from "@mui/material/Chip";
@@ -22,11 +21,10 @@ export default async function ProblemPage({ params }: PageProps) {
     <>
       <TopBarView id={id} table="problems" />
       <TopPageTitle title={card.title} />
-      <TopPageSubtitle title={card.description} />
       {card.tag && <Chip label={card.tag} size="small" color="primary" sx={{ mt: 1 }} />}
 
       <Typography sx={{ mt: 5, whiteSpace: 'pre-wrap' }}>
-        Here is my text
+        {card.description}
       </Typography>
     </>
   );
