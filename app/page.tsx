@@ -1,56 +1,39 @@
 "use client";
 
-import IdeaCard from "@/components/molecules/cards/ideaCard/ideaCard";
-import { supabase } from "@/utils/supabase";
+import BestIdeaCard from "@/components/molecules/cards/bestIdeaCard";
+import RecentCard from "@/components/molecules/cards/recentCard";
+import { useHome } from "@/hook/use.tsHome";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+
 
 export default function Home() {
 
-  const [scripts, setScripts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchScripts = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('ideas')
-      .select('*')
-      .order('updated_at', { ascending: true });
-
-    if (data) setScripts(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchScripts();
-  }, []);
+  const { state: { scripts, scripts2, loading }, setters: { fetchScripts } } = useHome();
 
   return (
     <>
       <Box sx={{ mt: 2 }}>
         <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-          {"Mes dernières idées"}
+          {"Mes meilleures idées"}
         </Typography>
-
         <Grid container spacing={2}>
-          {scripts.map((card) => (
+          {scripts.map((card, index) => (
             <Grid key={card.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <IdeaCard title={card.title} description={card.description} href={`/ideas/${card.id}`} tag={card.tag} />
+              <BestIdeaCard title={card.title} href={`/ideas/${card.id}`} rank={index + 1} />
             </Grid>
           ))}
         </Grid>
       </Box>
       <Box sx={{ mt: 5 }}>
-        <Typography variant="h6" component="h2">
-          {"Mes derniers problèmes"}
+        <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
+          {"Dernière mise à jour"}
         </Typography>
-
         <Grid container spacing={2}>
-          {scripts.map((card) => (
+          {scripts2.map((card, index) => (
             <Grid key={card.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <IdeaCard title={card.title} description={card.description} href={`/ideas/${card.id}`} tag={card.tag} />
+              <RecentCard title={card.title} href={`/${card.type}/${card.id}`} type={card.type} />
             </Grid>
           ))}
         </Grid>
