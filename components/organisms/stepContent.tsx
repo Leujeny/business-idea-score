@@ -43,8 +43,8 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                 humanNeeds={humanNeeds}
                 selectedNeeds={selectedHumanNeeds}
                 onToggleNeed={(id) => {
-                    setSelectedHumanNeeds(prev =>
-                        prev.includes(id) ? prev.filter(n => n !== id) : [...prev, id]
+                    setSelectedHumanNeeds(
+                        selectedHumanNeeds.includes(id) ? selectedHumanNeeds.filter(n => n !== id) : [...selectedHumanNeeds, id]
                     );
                 }}
             />
@@ -55,7 +55,7 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                 marketAssessments={marketAssessments}
                 assessmentValues={selectedMarketAssessments}
                 onChangeValue={(id, value) => {
-                    setSelectedMarketAssessments(prev => ({ ...prev, [id]: value }));
+                    setSelectedMarketAssessments({ ...selectedMarketAssessments, [id]: value });
                 }}
             />
         );
@@ -65,8 +65,8 @@ export default function StepContent({ activeStep, title, description, tag, setTi
                 formOfValues={formOfValues}
                 selectedValues={selectedFormOfValues}
                 onToggleValue={(id) => {
-                    setSelectedFormOfValues(prev =>
-                        prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
+                    setSelectedFormOfValues(
+                        selectedFormOfValues.includes(id) ? selectedFormOfValues.filter(v => v !== id) : [...selectedFormOfValues, id]
                     );
                 }}
             />
@@ -75,7 +75,8 @@ export default function StepContent({ activeStep, title, description, tag, setTi
         return (
             <AssociationStep
                 onChangeValue={(id, value) => {
-                    setSelectedAssociations(prev => ({ ...prev, [id]: value }));
+                    // @ts-ignore
+                    setSelectedAssociations((prev: any) => ({ ...prev, [id]: value }));
                 }}
             />
         );
